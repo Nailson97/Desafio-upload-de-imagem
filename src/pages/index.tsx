@@ -9,10 +9,10 @@ import { Loading } from '../components/Loading';
 import { Error } from '../components/Error';
 
 interface Image {
-  title: string,
-  description: string,
-  url: string,
-  ts: number,
+  title: string;
+  description: string;
+  url: string;
+  ts: number;
   id: string
 }
 
@@ -22,7 +22,7 @@ interface GetImageResponse {
 }
 export default function Home(): JSX.Element {
   async function fetchImages({ pageParam = null}): Promise<GetImageResponse> {
-    const { data } = await api('/api/images', {
+    const { data } = await api('api/images', {
       params: {
         after: pageParam
       }
@@ -44,12 +44,23 @@ export default function Home(): JSX.Element {
   );
 
   const formattedData = useMemo(() => {
-    // TODO FORMAT AND FLAT DATA ARRAY
+    const formatted = data?.pages.flatMap(imageData => {
+      return imageData.data.flat()
+    })
+    console.log(data?.pages)
+    console.log(formatted)
+    return formatted
   }, [data]);
 
-  // TODO RENDER LOADING SCREEN
+  if (isLoading && !isError) {
+    return <Loading />
+  }
+  if (isLoading && isError) {
+    return <Error />
+  }
 
-  // TODO RENDER ERROR SCREEN
+
+  
 
   return (
     <>
